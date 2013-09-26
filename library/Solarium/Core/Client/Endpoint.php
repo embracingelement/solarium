@@ -54,6 +54,7 @@ class Endpoint extends Configurable
      * @var array
      */
     protected $options = array(
+        'ssl'     => false,
         'host'    => '127.0.0.1',
         'port'    => 8983,
         'path'    => '/solr',
@@ -118,6 +119,27 @@ class Endpoint extends Configurable
     public function getHost()
     {
         return $this->getOption('host');
+    }
+
+    /**
+     * Set ssl option
+     *
+     * @param  boolean $ssl Use SSL encryption
+     * @return self   Provides fluent interface
+     */
+    public function setSsl($ssl)
+    {
+        return $this->setOption('ssl', $ssl);
+    }
+
+    /**
+     * Get ssl option
+     *
+     * @return string
+     */
+    public function getSsl()
+    {
+        return $this->getOption('ssl');
     }
 
     /**
@@ -210,6 +232,11 @@ class Endpoint extends Configurable
         return $this->getOption('timeout');
     }
 
+    public function getScheme()
+    {
+        return $this->getSsl() ? 'https://' : 'http://';
+    }
+
     /**
      * Get the base url for all requests
      *
@@ -219,7 +246,7 @@ class Endpoint extends Configurable
      */
     public function getBaseUri()
     {
-        $uri = 'http://' . $this->getHost() . ':' . $this->getPort() . $this->getPath() . '/';
+        $uri = $this->getScheme() . $this->getHost() . ':' . $this->getPort() . $this->getPath() . '/';
 
         $core = $this->getCore();
         if (!empty($core)) {
@@ -271,6 +298,7 @@ class Endpoint extends Configurable
     {
         $output = __CLASS__ . '::__toString' . "\n"
                 . 'base uri: ' . $this->getBaseUri() . "\n"
+                . 'ssl: ' . $this->getSsl() . "\n"
                 . 'host: ' . $this->getHost() . "\n"
                 . 'port: ' . $this->getPort() ."\n"
                 . 'path: ' . $this->getPath() ."\n"

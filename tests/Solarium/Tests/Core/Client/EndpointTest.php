@@ -47,6 +47,23 @@ class EndpointTest extends \PHPUnit_Framework_TestCase
     public function testConfigMode()
     {
         $options = array(
+            'ssl'      => false,
+            'host'     => '192.168.0.1',
+            'port'     => 123,
+            'path'     => '/mysolr/',
+            'core'     => 'mycore',
+            'timeout'  => 3,
+            'username' => 'x',
+            'password' => 'y'
+        );
+        $this->endpoint->setOptions($options);
+
+        $options['path'] = '/mysolr'; //expected trimming of trailing slash
+
+        $this->assertEquals($options, $this->endpoint->getOptions());
+
+        $options = array(
+            'ssl'      => true,
             'host'     => '192.168.0.1',
             'port'     => 123,
             'path'     => '/mysolr/',
@@ -103,6 +120,10 @@ class EndpointTest extends \PHPUnit_Framework_TestCase
         $this->endpoint->setHost('myserver')->setPath('/mypath')->setPort(123);
 
         $this->assertEquals('http://myserver:123/mypath/', $this->endpoint->getBaseUri());
+
+        $this->endpoint->setHost('myserver')->setPath('/mypath')->setPort(123)->setSsl( true );
+
+        $this->assertEquals('https://myserver:123/mypath/', $this->endpoint->getBaseUri());
     }
 
     public function testGetBaseUriWithCore()
@@ -131,6 +152,7 @@ class EndpointTest extends \PHPUnit_Framework_TestCase
     public function testToString()
     {
         $options = array(
+            'ssl'      => true,
             'host'     => '192.168.0.1',
             'port'     => 123,
             'path'     => '/mysolr/',
@@ -143,7 +165,8 @@ class EndpointTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(
 'Solarium\Core\Client\Endpoint::__toString
-base uri: http://192.168.0.1:123/mysolr/mycore/
+base uri: https://192.168.0.1:123/mysolr/mycore/
+ssl: 1
 host: 192.168.0.1
 port: 123
 path: /mysolr
