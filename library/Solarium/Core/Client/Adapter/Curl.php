@@ -152,6 +152,11 @@ class Curl extends Configurable implements AdapterInterface
            curl_setopt($handler, CURLOPT_PROXY, $proxy);
         }
 
+        if ( $this->getOption('ssl') ){
+            curl_setopt($handler, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($handler, CURLOPT_SSL_VERIFYHOST, FALSE);
+        }
+
         if (!isset($options['headers']['Content-Type'])) {
             $options['headers']['Content-Type'] = 'text/xml; charset=utf-8';
         }
