@@ -1,4 +1,4 @@
-# Solarium PHP Solr client library
+# Solarium PHP Solr client library : CT
 
 
 ## What is Solarium?
